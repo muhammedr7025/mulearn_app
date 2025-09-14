@@ -28,6 +28,50 @@ class _EditProfileDialogState extends State<EditProfileDialog> {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+               const Text("First name"),
+              const SizedBox(height: 8),
+              const TextField(
+                decoration: InputDecoration(
+                  hintText: "First name",
+                  filled: true,
+                  fillColor: Colors.white,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(10)),
+                    borderSide: BorderSide.none,
+                  ),
+                ),
+              ),
+               const SizedBox(height: 16),
+               const Text("Last name"),
+              const SizedBox(height: 8),
+              const TextField(
+                decoration: InputDecoration(
+                  hintText: "Last name",
+                  filled: true,
+                  fillColor: Colors.white,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(10)),
+                    borderSide: BorderSide.none,
+                  ),
+                ),
+              ),
+               const SizedBox(height: 16),
+               const Text("Email"),
+              const SizedBox(height: 8),
+              const TextField(
+                decoration: InputDecoration(
+                  hintText: "Email",
+                  filled: true,
+                  fillColor: Colors.white,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(10)),
+                    borderSide: BorderSide.none,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 16),
+              
+             
               const Text("Mobile"),
               const SizedBox(height: 8),
               const TextField(
