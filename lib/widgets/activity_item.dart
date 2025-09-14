@@ -15,14 +15,18 @@ Widget buildActivityItem(String activityText, String timeStamp) {
     padding: const EdgeInsets.symmetric(vertical: 15.0, horizontal: 10),
     child: Row(
       children: [
-        // Icon
-        const CircleAvatar(
-          backgroundColor: Color(0xFF673AB7), // Deep purple
-          child: Text(
-            'K',
-            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-          ),
-        ),
+       CircleAvatar(
+  backgroundColor: Colors.transparent, // optional, if you want no bg color
+  radius: 20, // optional, adjust size
+  child: ClipOval(
+    child: Image.asset(
+      'assets/images/img2.png', // your local image path
+      fit: BoxFit.cover,
+      width: 40, // match the CircleAvatar radius
+      height: 40,
+    ),
+  ),
+),
         const SizedBox(width: 12),
         // Activity text and timestamp
         Expanded(

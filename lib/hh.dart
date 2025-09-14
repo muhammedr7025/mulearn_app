@@ -285,7 +285,7 @@ class _ProfilePgeState extends State<ProfilePge> {
           Expanded(
             child: statCard(
               context,
-              title: 'Avg.Karma/Month',
+              title: 'Avg.Karma',
               value: '101',
               icon: Icons.percent,
             ),

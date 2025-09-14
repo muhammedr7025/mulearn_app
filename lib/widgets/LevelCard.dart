@@ -21,7 +21,7 @@ class LevelCard extends StatelessWidget {
     return Card(
       elevation: 0,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(15),
         side: const BorderSide(color: Color(0xFFE2E8F0), width: 1),
       ),
       margin: const EdgeInsets.symmetric(horizontal: 16.0),

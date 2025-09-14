@@ -18,16 +18,18 @@ Widget statCard(
         Icon(icon, color: theme.colorScheme.primary),
         const SizedBox(height: 12),
         Text(
+
           title,
           style: theme.textTheme.bodyMedium?.copyWith(
             color: theme.colorScheme.primary,
+            fontWeight: FontWeight.bold
           ),
         ),
         const SizedBox(height: 6),
         Text(
           value,
           style: theme.textTheme.headlineSmall?.copyWith(
-            fontWeight: FontWeight.w700,
+            fontWeight: FontWeight.bold,
           ),
         ),
       ],

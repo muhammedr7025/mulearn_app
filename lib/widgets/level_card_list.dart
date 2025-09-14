@@ -43,6 +43,7 @@ class LevelCardList extends StatelessWidget {
     ];
 
     return Container(
+      height: 500,
       constraints: const BoxConstraints(maxWidth: 400),
       decoration: BoxDecoration(
         color: Colors.white,
