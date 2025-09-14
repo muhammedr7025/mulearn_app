@@ -1,6 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:device_preview/device_preview.dart';
-import 'package:mu/hh.dart';
+import 'package:mu/forgot_password.dart';
+import 'package:mu/login_page%20(1).dart';
+
+import 'package:mu/login_with_otp%20(1).dart';
+
+import 'package:mu/profpag.dart';
+import 'package:mu/signup_page.dart';
 
 
 void main() {
@@ -25,7 +31,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
-      home: const ProfilePge(), // <-- show ProfilePage first
+      home: const LoginPage(), // <-- show ProfilePage first
     );
   }
 }
