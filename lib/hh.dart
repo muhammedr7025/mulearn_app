@@ -3,20 +3,18 @@ import 'dart:math' as math;
 import 'package:flutter/cupertino.dart';
 
 import 'package:mu/widgets/EditProfileDialog.dart';
-import 'package:mu/widgets/KarmaItemCard.dart';
-import 'package:mu/widgets/LevelCard.dart';
-import 'package:mu/widgets/PieChartPainter.dart';
+
+
 import 'package:mu/widgets/ShareProfileDialog.dart';
-import 'package:mu/widgets/TaskItem.dart';
+
 import 'package:mu/widgets/achievement_card.dart';
-import 'package:mu/widgets/achievement_item.dart';
-import 'package:mu/widgets/activity_item.dart';
+
 import 'package:mu/widgets/circle_icon.dart';
 import 'package:mu/widgets/connect_card.dart';
 import 'package:mu/widgets/interest_groups_card.dart';
 import 'package:mu/widgets/karma_distribution_card.dart';
 import 'package:mu/widgets/karma_history_card.dart';
-import 'package:mu/widgets/legend_item.dart';
+
 import 'package:mu/widgets/level_card_list.dart';
 import 'package:mu/widgets/profile_settings_card.dart';
 import 'package:mu/widgets/recent_activity_card.dart';
