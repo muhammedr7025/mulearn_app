@@ -135,10 +135,11 @@ class _LoginPageState extends State<LoginPage> {
                         children: [
                           TextButton(
                             onPressed: () {
-                             Navigator.push(
+                              Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => const ForgotPasswordPage(),
+                                  builder:
+                                      (context) => const ForgotPasswordPage(),
                                 ),
                               );
                             },
@@ -179,11 +180,11 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                           onPressed: () {
                             Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => const LoginPage(),
-                                ),
-                              );
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const LoginPage(),
+                              ),
+                            );
                           },
                           child: Text(
                             "Sign in",
@@ -202,24 +203,16 @@ class _LoginPageState extends State<LoginPage> {
                       TextButton(
                         onPressed: () {
                           Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => const SignUpPage(),
-                                ),
-                              );
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const SignUpPage(),
+                            ),
+                          );
                         },
                         child: const Text("Don't have an account? Sign up"),
                       ),
 
                       const SizedBox(height: 12),
-
-                      // Homepage link
-                      TextButton(
-                        onPressed: () {
-                          // TODO: Homepage navigation logic
-                        },
-                        child: const Text("Homepage"),
-                      ),
                     ],
                   ),
                 ),
