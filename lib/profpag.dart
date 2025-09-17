@@ -1,507 +1,334 @@
 import 'package:flutter/material.dart';
-import 'dart:math' as math;
-import 'package:flutter/cupertino.dart';
-import 'package:mu/widgets/EditProfileDialog.dart';
-import 'package:mu/widgets/ShareProfileDialog.dart';
-import 'package:mu/widgets/achievement_card.dart';
-import 'package:mu/widgets/circle_icon.dart';
-import 'package:mu/widgets/connect_card.dart';
-import 'package:mu/widgets/interest_groups_card.dart';
-import 'package:mu/widgets/karma_distribution_card.dart';
-import 'package:mu/widgets/karma_history_card.dart';
-import 'package:mu/widgets/level_card_list.dart';
-import 'package:mu/widgets/profile_settings_card.dart';
-import 'package:mu/widgets/recent_activity_card.dart';
-import 'package:mu/widgets/reports_card.dart';
-import 'package:mu/widgets/stat_card.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
+import 'providers/auth_provider.dart';
 
-class ProfilePge extends StatefulWidget {
-  const ProfilePge({super.key});
-
-  @override
-  State<ProfilePge> createState() => _ProfilePgeState();
-}
-
-class _ProfilePgeState extends State<ProfilePge> {
-  // State variables
-  String selectedYear = '2025';
-  bool isPublicProfile = false;
-  bool isOpenToWork = false;
-  bool isOpenToGigs = false;
-  int selectedTabIndex = 0; // For top tabs
-
-  final List<String> tabs = [
-    'Basic Details',
-    'Karma History',
-    'Mu Voyage',
-    'Achievement',
-  ];
+// Enhanced ProfilePage that works with your existing AuthProvider
+class ProfilePage extends StatelessWidget {
+  const ProfilePage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
-    // Mock data
-    const coverUrl =
-        'https://images.unsplash.com/photo-1520975916090-3105956dac38?q=80&w=1600';
-    const avatarUrl = 'https://i.pravatar.cc/300?img=5';
-    const name = 'Jishnu M S (MCE)';
-    const email = 'jishnums@mulearn';
-    const level = 'LEVEL 4';
-
-    const double avatarRadius = 52;
-    const double ringWidth = 6;
-
     return Scaffold(
       appBar: AppBar(
-        title: const Text(''),
-        elevation: 0,
-        backgroundColor: theme.scaffoldBackgroundColor,
-        surfaceTintColor: Colors.transparent,
-        leading: IconButton(icon: const Icon(Icons.menu), onPressed: () {}),
+        title: Text(
+          'Profile',
+          style: GoogleFonts.plusJakartaSans(fontWeight: FontWeight.w600),
+        ),
+        backgroundColor: Colors.blue,
+        foregroundColor: Colors.white,
         actions: [
-          GestureDetector(
-            onTap: () {
-              _showLogoutWarning(context);
+          PopupMenuButton<String>(
+            onSelected: (value) {
+              if (value == 'logout') {
+                _showLogoutDialog(context);
+              }
             },
-            child: Padding(
-              padding: const EdgeInsets.only(right: 12),
-              child: CircleAvatar(
-                radius: 16,
-                backgroundImage: NetworkImage(avatarUrl),
-              ),
-            ),
+            itemBuilder:
+                (context) => [
+                  PopupMenuItem(
+                    value: 'logout',
+                    child: Row(
+                      children: [
+                        Icon(Icons.logout, size: 18),
+                        SizedBox(width: 8),
+                        Text('Logout'),
+                      ],
+                    ),
+                  ),
+                ],
           ),
         ],
       ),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-          child: Column(
-            children: [
-              // ====== Top Profile Card ======
-              Card(
-                color: Colors.white,
-                elevation: 3,
-                clipBehavior: Clip.antiAlias,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    // ===== Banner =====
-                    Stack(
-                      clipBehavior: Clip.none,
+      body: Consumer<AuthProvider>(
+        builder: (context, authProvider, child) {
+          final user = authProvider.user;
+
+          if (user == null) {
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.error_outline, size: 64, color: Colors.grey),
+                  SizedBox(height: 16),
+                  Text(
+                    'User information not available',
+                    style: GoogleFonts.plusJakartaSans(),
+                  ),
+                  SizedBox(height: 16),
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: Text('Go Back'),
+                  ),
+                ],
+              ),
+            );
+          }
+
+          return SingleChildScrollView(
+            padding: EdgeInsets.all(20.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Profile Header Card
+                Card(
+                  elevation: 2,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  child: Container(
+                    width: double.infinity,
+                    padding: EdgeInsets.all(24.0),
+                    child: Column(
                       children: [
-                        ClipRRect(
-                          borderRadius: const BorderRadius.only(
-                            topLeft: Radius.circular(20),
-                            topRight: Radius.circular(20),
+                        // Avatar
+                        Container(
+                          width: 100,
+                          height: 100,
+                          decoration: BoxDecoration(
+                            color: Colors.blue,
+                            shape: BoxShape.circle,
                           ),
-                          child: Container(
-                            height: 140,
-                            width: double.infinity,
-                            decoration: BoxDecoration(
-                              image: DecorationImage(
-                                image: NetworkImage(coverUrl),
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                          ),
-                        ),
-                        // ===== Avatar Centered Over Banner =====
-                        Positioned(
-                          bottom:
-                              -avatarRadius, // half of avatar overlaps banner
-                          left: 0,
-                          right: 0,
                           child: Center(
-                            child: Container(
-                              width: avatarRadius * 2 + ringWidth * 2,
-                              height: avatarRadius * 2 + ringWidth * 2,
-                              decoration: BoxDecoration(
+                            child: Text(
+                              _getInitials(user),
+                              style: GoogleFonts.plusJakartaSans(
+                                fontSize: 36,
+                                fontWeight: FontWeight.bold,
                                 color: Colors.white,
-                                shape: BoxShape.circle,
-                                border: Border.all(
-                                  color: theme.colorScheme.primary,
-                                  width: ringWidth,
-                                ),
-                              ),
-                              child: CircleAvatar(
-                                radius: avatarRadius,
-                                backgroundImage: NetworkImage(avatarUrl),
                               ),
                             ),
                           ),
                         ),
-                      ],
-                    ),
+                        SizedBox(height: 16),
 
-                    const SizedBox(height: 8), // small gap below avatar
-                    // ===== Row for avatar space + right-side icons =====
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      child: Row(
-                        children: [
-                          Spacer(),
-                          // Edit icon (opens the form)
-                          GestureDetector(
-                            onTap: () {
-                              showDialog(
-                                context: context,
-                                builder: (BuildContext context) {
-                                  return const EditProfileDialog();
-                                },
-                              );
-                            },
-                            child: circleIcon(theme, Icons.edit),
-                          ),
-                          const SizedBox(width: 12),
-                          // Share icon (opens the share dialog)
-                          GestureDetector(
-                            onTap: () {
-                              showDialog(
-                                context: context,
-                                builder: (BuildContext context) {
-                                  return const ShareProfileDialog();
-                                },
-                              );
-                            },
-                            child: circleIcon(theme, Icons.share),
-                          ),
-                        ],
-                      ),
-                    ),
-
-                    const SizedBox(height: 16),
-
-                    // ===== Name & Email =====
-                    Text(
-                      name,
-                      textAlign: TextAlign.center,
-                      style: theme.textTheme.titleLarge?.copyWith(
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      email,
-                      textAlign: TextAlign.center,
-                      style: theme.textTheme.bodyMedium?.copyWith(
-                        color: theme.hintColor,
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-
-                    // ===== Level Badge =====
-                    Center(
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 10,
-                          vertical: 4,
-                        ),
-                        decoration: BoxDecoration(
-                          color: theme.colorScheme.primary.withOpacity(0.08),
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        child: Text(
-                          level,
-                          style: theme.textTheme.labelLarge?.copyWith(
-                            color: theme.colorScheme.primary,
+                        // Name
+                        Text(
+                          '${user.firstName} ${user.lastName}',
+                          style: GoogleFonts.plusJakartaSans(
+                            fontSize: 24,
                             fontWeight: FontWeight.w700,
                           ),
                         ),
-                      ),
-                    ),
+                        SizedBox(height: 8),
 
-                    const SizedBox(height: 16),
+                        // Email
+                        Text(
+                          user.email,
+                          style: GoogleFonts.plusJakartaSans(
+                            fontSize: 16,
+                            color: Colors.grey[600],
+                          ),
+                        ),
 
-                    // ===== Tabs =====
-                    SizedBox(
-                      height: 40,
-                      child: ListView.separated(
-                        scrollDirection: Axis.horizontal,
-                        padding: const EdgeInsets.symmetric(horizontal: 16),
-                        itemCount: tabs.length,
-                        separatorBuilder: (_, __) => const SizedBox(width: 12),
-                        itemBuilder: (context, index) {
-                          final isSelected = selectedTabIndex == index;
-                          return GestureDetector(
-                            onTap: () {
-                              setState(() {
-                                selectedTabIndex = index;
-                              });
-                            },
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Text(
-                                  tabs[index],
-                                  style: TextStyle(
-                                    color: isSelected
-                                        ? theme.colorScheme.primary
-                                        : Colors.black54,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-                                const SizedBox(height: 4),
-                                Container(
-                                  height: 3,
-                                  width: 30,
-                                  decoration: BoxDecoration(
-                                    color: isSelected
-                                        ? theme.colorScheme.primary
-                                        : Colors.transparent,
-                                    borderRadius: BorderRadius.circular(1.5),
-                                  ),
-                                ),
-                              ],
+                        // MUID Badge
+                        if (user.muid != null) ...[
+                          SizedBox(height: 12),
+                          Container(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 16,
+                              vertical: 8,
                             ),
-                          );
-                        },
-                      ),
-                    ),
-
-                    const SizedBox(height: 16),
-
-                    // ===== Stats Row =====
-                    Row(
-                      children: [
-                        Expanded(
-                          child: statCard(
-                            context,
-                            title: 'Karma',
-                            value: '1.72K',
-                            icon: Icons.bubble_chart,
+                            decoration: BoxDecoration(
+                              color: Colors.blue.withOpacity(0.1),
+                              borderRadius: BorderRadius.circular(20),
+                              border: Border.all(
+                                color: Colors.blue.withOpacity(0.3),
+                              ),
+                            ),
+                            child: Text(
+                              'MUID: ${user.muid}',
+                              style: GoogleFonts.plusJakartaSans(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w600,
+                                color: Colors.blue[700],
+                              ),
+                            ),
                           ),
-                        ),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: statCard(
-                            context,
-                            title: 'Avg.Karma',
-                            value: '101',
-                            icon: Icons.percent,
-                          ),
-                        ),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: statCard(
-                            context,
-                            title: 'Rank',
-                            value: '3213',
-                            icon: Icons.bar_chart,
-                          ),
-                        ),
+                        ],
                       ],
                     ),
-                    const SizedBox(height: 24),
-                    statCard(
-                      context,
-                      title: 'Percentile',
-                      value: '5.47',
-                      icon: Icons.bar_chart,
+                  ),
+                ),
+
+                SizedBox(height: 24),
+
+                // Profile Information Section
+                Text(
+                  'Profile Information',
+                  style: GoogleFonts.plusJakartaSans(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                SizedBox(height: 16),
+
+                // Info Cards
+                _buildInfoTile(
+                  icon: Icons.fingerprint,
+                  title: 'User ID',
+                  subtitle: user.id,
+                ),
+
+                _buildInfoTile(
+                  icon: Icons.email_outlined,
+                  title: 'Email Address',
+                  subtitle: user.email,
+                ),
+
+                _buildInfoTile(
+                  icon: Icons.person_outline,
+                  title: 'First Name',
+                  subtitle: user.firstName,
+                ),
+
+                _buildInfoTile(
+                  icon: Icons.person_outline,
+                  title: 'Last Name',
+                  subtitle: user.lastName,
+                ),
+
+                if (user.muid != null)
+                  _buildInfoTile(
+                    icon: Icons.badge_outlined,
+                    title: 'MuLearn ID (MUID)',
+                    subtitle: user.muid!,
+                  ),
+
+                SizedBox(height: 32),
+
+                // Action Buttons
+                Row(
+                  children: [
+                    Expanded(
+                      child: OutlinedButton.icon(
+                        onPressed: () {
+                          // Refresh user data
+                          // authProvider.getCurrentUser();
+                        },
+                        icon: Icon(Icons.refresh),
+                        label: Text(
+                          'Refresh',
+                          style: GoogleFonts.plusJakartaSans(),
+                        ),
+                        style: OutlinedButton.styleFrom(
+                          padding: EdgeInsets.symmetric(vertical: 12),
+                          side: BorderSide(color: Colors.blue),
+                        ),
+                      ),
                     ),
-                    const SizedBox(height: 8),
+                    SizedBox(width: 16),
+                    Expanded(
+                      child: ElevatedButton.icon(
+                        onPressed: () => _showLogoutDialog(context),
+                        icon: Icon(Icons.logout),
+                        label: Text(
+                          'Logout',
+                          style: GoogleFonts.plusJakartaSans(
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.red,
+                          foregroundColor: Colors.white,
+                          padding: EdgeInsets.symmetric(vertical: 12),
+                        ),
+                      ),
+                    ),
                   ],
                 ),
+
+                SizedBox(height: 24),
+              ],
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _buildInfoTile({
+    required IconData icon,
+    required String title,
+    required String subtitle,
+  }) {
+    return Card(
+      margin: EdgeInsets.only(bottom: 8),
+      elevation: 0,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+        side: BorderSide(color: Colors.grey[200]!),
+      ),
+      child: ListTile(
+        leading: Icon(icon, color: Colors.blue[600], size: 24),
+        title: Text(
+          title,
+          style: GoogleFonts.plusJakartaSans(
+            fontSize: 14,
+            fontWeight: FontWeight.w600,
+            color: Colors.grey[700],
+          ),
+        ),
+        subtitle: Text(
+          subtitle,
+          style: GoogleFonts.plusJakartaSans(
+            fontSize: 16,
+            fontWeight: FontWeight.w400,
+          ),
+        ),
+        contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      ),
+    );
+  }
+
+  String _getInitials(user) {
+    final first = user.firstName.isNotEmpty ? user.firstName[0] : '';
+    final last = user.lastName.isNotEmpty ? user.lastName[0] : '';
+    return '$first$last'.toUpperCase();
+  }
+
+  void _showLogoutDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder:
+          (context) => AlertDialog(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16),
+            ),
+            title: Text(
+              'Logout',
+              style: GoogleFonts.plusJakartaSans(fontWeight: FontWeight.w600),
+            ),
+            content: Text(
+              'Are you sure you want to logout?',
+              style: GoogleFonts.plusJakartaSans(),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: Text(
+                  'Cancel',
+                  style: GoogleFonts.plusJakartaSans(color: Colors.grey[600]),
+                ),
               ),
-
-              const SizedBox(height: 16),
-
-              // ===== Rest of the cards remain the same =====
-              _buildDynamicCard(),
-              const SizedBox(height: 16),
-
-              ProfileSettingsCard(),
-              const SizedBox(height: 16),
-              ConnectWithMeCard(),
-              const SizedBox(height: 16),
-              _existingRolesCard(),
-              const SizedBox(height: 16),
-              reportsCard(),
-              const SizedBox(height: 16),
-              recentActivityCard(),
-              const SizedBox(height: 16),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.pop(context); // Close dialog
+                  context.read<AuthProvider>().logout();
+                },
+                style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+                child: Text(
+                  'Logout',
+                  style: GoogleFonts.plusJakartaSans(
+                    color: Colors.white,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
             ],
           ),
-        ),
-      ),
     );
   }
-
-  // ===== Dynamic Card Builder =====
-  Widget _buildDynamicCard() {
-    switch (selectedTabIndex) {
-      case 0:
-        return Column(
-          children: [InterestGroupsCard(), karmaDistributionCard()],
-        );
-
-      case 1:
-        return KarmaHistoryCard();
-      case 2:
-        return LevelCardList();
-      case 3:
-        return AchievementCard();
-      default:
-        return SizedBox.shrink();
-    }
-  }
-
-  Widget _existingRolesCard() => SizedBox(
-    width: double.infinity,
-    child: Card(
-      color: Colors.white,
-      elevation: 4,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-      child: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              "Existing Roles",
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                color: Colors.black,
-              ),
-            ),
-            const SizedBox(height: 20),
-            const Text(
-              "Student",
-              style: TextStyle(fontSize: 16, color: Color(0xFF4C87F5)),
-            ),
-          ],
-        ),
-      ),
-    ),
-  );
-}
-
-class _PieChartPainter extends CustomPainter {
-  const _PieChartPainter();
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    double radius = 1;
-    radius = math.min(size.width / 2, size.height / 2);
-    Offset center = Offset(size.width / 2, size.height / 2);
-
-    // Hardcoded angles for the segments (94.6%, Collaboration, Profile Building)
-    const double generalEnablementAngle = 0.946 * 2 * math.pi;
-    const double collaborationAngle = 0.03 * 2 * math.pi;
-    const double profileBuildingAngle = 0.024 * 2 * math.pi;
-
-    // Draw slices
-    _drawSlice(
-      canvas,
-      center,
-      radius,
-      0,
-      generalEnablementAngle,
-      const Color(0xFF90CAF9),
-    );
-    _drawSlice(
-      canvas,
-      center,
-      radius,
-      generalEnablementAngle,
-      collaborationAngle,
-      const Color(0xFF42A5F5),
-    );
-    _drawSlice(
-      canvas,
-      center,
-      radius,
-      generalEnablementAngle + collaborationAngle,
-      profileBuildingAngle,
-      const Color(0xFF1E88E5),
-    );
-
-    // Draw the percentage text for the largest segment
-    const double textRadius = 0.7 * 1;
-    Offset textCenter = Offset(
-      center.dx +
-          textRadius * math.cos(generalEnablementAngle / 2 - math.pi / 2),
-      center.dy +
-          textRadius * math.sin(generalEnablementAngle / 2 - math.pi / 2),
-    );
-
-    final textPainter = TextPainter(
-      text: const TextSpan(
-        text: '94.6%',
-        style: TextStyle(
-          color: Colors.white,
-          fontWeight: FontWeight.bold,
-          fontSize: 14,
-        ),
-      ),
-      textDirection: TextDirection.ltr,
-    );
-    textPainter.layout();
-    textPainter.paint(
-      canvas,
-      textCenter - Offset(textPainter.width / 2, textPainter.height / 2),
-    );
-  }
-
-  void _drawSlice(
-    Canvas canvas,
-    Offset center,
-    double radius,
-    double startAngle,
-    double sweepAngle,
-    Color color,
-  ) {
-    final paint = Paint()
-      ..color = color
-      ..style = PaintingStyle.fill;
-
-    canvas.drawArc(
-      Rect.fromCircle(center: center, radius: radius),
-      startAngle,
-      sweepAngle,
-      true,
-      paint,
-    );
-  }
-
-  @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) {
-    return false;
-  }
-}
-
-void _showLogoutWarning(BuildContext context) {
-  showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return AlertDialog(
-        title: const Text('Logout'),
-        content: const Text('Are you sure you want to log out?'),
-        actions: <Widget>[
-          TextButton(
-            child: const Text('Cancel'),
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-          ),
-          ElevatedButton(
-            child: const Text('Logout'),
-            onPressed: () {
-              // TODO: Implement your logout logic here
-              Navigator.of(context).pop();
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.red,
-              foregroundColor: Colors.white,
-            ),
-          ),
-        ],
-      );
-    },
-  );
 }
